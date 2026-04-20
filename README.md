@@ -14,10 +14,10 @@ A desktop application for converting PNG images to SVG using the Potrace vectori
 <img src="docs/assets/architecture.png" alt="Architecture diagram" width="100%">
 
 Key architectural decisions:
-- Renderer is sandboxed — no Node, no fs, no raw IPC (`nodeIntegration: false`, `contextIsolation: true`) — [ADR 0002](docs/adr/0002-context-isolation-and-preload-api.md)
-- Dual build: `tsc` for main process, Vite for renderer — [ADR 0003](docs/adr/0003-react-and-vite-for-renderer.md)
-- Per-file SVG cache keyed on options — avoids re-tracing on file switch — [ADR 0007](docs/adr/0007-options-based-svg-cache.md)
-- Tight viewBox via cubic Bezier extrema — editor-compatible output (Figma, Illustrator, Sketch) — [ADR 0010](docs/adr/0010-tight-viewbox-cubic-bezier.md)
+- Renderer is sandboxed — no Node, no fs, no raw IPC (`nodeIntegration: false`, `contextIsolation: true`) — [ADR 0002](https://ViktoriaFox.github.io/Vektory/adr/0002-context-isolation-and-preload-api)
+- Dual build: `tsc` for main process, Vite for renderer — [ADR 0003](https://ViktoriaFox.github.io/Vektory/adr/0003-react-and-vite-for-renderer)
+- Per-file SVG cache keyed on options — avoids re-tracing on file switch — [ADR 0007](https://ViktoriaFox.github.io/Vektory/adr/0007-options-based-svg-cache)
+- Tight viewBox via cubic Bezier extrema — editor-compatible output (Figma, Illustrator, Sketch) — [ADR 0010](https://ViktoriaFox.github.io/Vektory/adr/0010-tight-viewbox-cubic-bezier)
 
 [Full architecture with sequence diagrams →](https://ViktoriaFox.github.io/Vektory/architecture)
 
@@ -65,10 +65,10 @@ Selected architectural decisions — the non-obvious ones:
 
 | ADR | Decision |
 |-----|----------|
-| [0002](docs/adr/0002-context-isolation-and-preload-api.md) | Context isolation and preload-only IPC API |
-| [0007](docs/adr/0007-options-based-svg-cache.md) | Options-based SVG cache invalidation |
-| [0008](docs/adr/0008-dual-independent-view-state.md) | Dual independent view state (SVG vs Original) |
-| [0010](docs/adr/0010-tight-viewbox-cubic-bezier.md) | Tight SVG viewBox via cubic Bezier extrema |
+| [0002](https://ViktoriaFox.github.io/Vektory/adr/0002-context-isolation-and-preload-api) | Context isolation and preload-only IPC API |
+| [0007](https://ViktoriaFox.github.io/Vektory/adr/0007-options-based-svg-cache) | Options-based SVG cache invalidation |
+| [0008](https://ViktoriaFox.github.io/Vektory/adr/0008-dual-independent-view-state) | Dual independent view state (SVG vs Original) |
+| [0010](https://ViktoriaFox.github.io/Vektory/adr/0010-tight-viewbox-cubic-bezier) | Tight SVG viewBox via cubic Bezier extrema |
 
 [All ten ADRs on the docs site →](https://ViktoriaFox.github.io/Vektory/adr/)
 
