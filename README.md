@@ -11,35 +11,7 @@ A desktop application for converting PNG images to SVG using the Potrace vectori
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    user(["👤 Designer<br/><b>converting PNG → SVG</b>"])
-
-    subgraph app["🖥️ Vektory Desktop Application"]
-        direction TB
-        renderer["<b>Renderer Process</b><br/>React · Zustand · Vite<br/>UI · state · live preview"]
-        preload{{"🔒 <b>Preload Script</b><br/>TypeScript · contextBridge<br/>only crossing point"}}
-        main["<b>Main Process</b><br/>Node.js · Sharp · Potrace<br/>pipeline · I/O · security"]
-
-        renderer -- "window.electronAPI" --> preload
-        preload == "ipcRenderer.invoke ⇄ ipcMain.handle" ==> main
-    end
-
-    fs[("📁 File System<br/>PNG in · SVG out")]
-
-    user -- uses --> renderer
-    main -- "read / write" --> fs
-
-    classDef proc fill:#E8F1FF,stroke:#2563EB,stroke-width:2px,color:#0F172A
-    classDef bridge fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#0F172A
-    classDef ext fill:#F1F5F9,stroke:#64748B,stroke-width:1px,stroke-dasharray:4 3,color:#0F172A
-    classDef actor fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A
-
-    class renderer,main proc
-    class preload bridge
-    class fs ext
-    class user actor
-```
+![Architecture diagram](docs/assets/architecture.png)
 
 Key architectural decisions:
 - Renderer is sandboxed — no Node, no fs, no raw IPC (`nodeIntegration: false`, `contextIsolation: true`) — [ADR 0002](docs/adr/0002-context-isolation-and-preload-api.md)
