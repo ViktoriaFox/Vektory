@@ -37,8 +37,8 @@ Key architectural decisions:
 
 | Platform | File |
 |----------|------|
-| Windows 10/11 (64-bit) | [Vektory-1.0.0.exe](../../releases/latest/download/Vektory-1.0.0.exe) |
-| macOS 12+ (Intel + Apple Silicon) | [Vektory-1.0.0.dmg](../../releases/latest/download/Vektory-1.0.0.dmg) |
+| Windows 10/11 (64-bit) | [Vektory-1.0.0.exe](https://github.com/ViktoriaFox/Vektory/releases/latest/download/Vektory-1.0.0.exe) |
+| macOS 12+ (Intel + Apple Silicon) | [Vektory-1.0.0.dmg](https://github.com/ViktoriaFox/Vektory/releases/latest/download/Vektory-1.0.0.dmg) |
 
 Both binaries are unsigned — see the [Install Guide](https://ViktoriaFox.github.io/Vektory/install) for SmartScreen and Gatekeeper workarounds.
 
@@ -61,7 +61,7 @@ Both binaries are unsigned — see the [Install Guide](https://ViktoriaFox.githu
 
 ## Architectural decision records
 
-Selected architectural decisions — the non-obvious ones:
+Selected architectural decisions:
 
 | ADR | Decision |
 |-----|----------|
