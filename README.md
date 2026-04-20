@@ -11,7 +11,7 @@ A desktop application for converting PNG images to SVG using the Potrace vectori
 
 ## Architecture
 
-![Architecture diagram](docs/assets/architecture.png)
+<img src="docs/assets/architecture.png" alt="Architecture diagram" width="100%">
 
 Key architectural decisions:
 - Renderer is sandboxed — no Node, no fs, no raw IPC (`nodeIntegration: false`, `contextIsolation: true`) — [ADR 0002](docs/adr/0002-context-isolation-and-preload-api.md)
