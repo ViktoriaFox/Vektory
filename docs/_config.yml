@@ -1,0 +1,25 @@
+title: Vektory
+description: PNG to SVG vectorization — an Electron + TypeScript portfolio project by Viktoria Neva
+baseurl: "/Vektory"           # replace with your public repo name
+url: "https://ViktoriaFox.github.io"
+
+theme: minima
+
+minima:
+  skin: classic
+
+header_pages:
+  - architecture.md
+  - adr/index.md
+  - install.md
+  - settings-guide.md
+  - CHANGELOG.md
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

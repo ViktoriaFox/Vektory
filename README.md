@@ -1,0 +1,118 @@
+# Vektory
+
+A desktop application for converting PNG images to SVG using the Potrace vectorization algorithm. Built with Electron, TypeScript, React, and Vite.
+
+[![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![App: Proprietary](https://img.shields.io/badge/App-Proprietary-lightgrey.svg)](LICENSE)
+
+![Vektory demo](docs/assets/demo.gif)
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    user(["👤 Designer<br/><b>converting PNG → SVG</b>"])
+
+    subgraph app["🖥️ Vektory Desktop Application"]
+        direction TB
+        renderer["<b>Renderer Process</b><br/>React · Zustand · Vite<br/>UI · state · live preview"]
+        preload{{"🔒 <b>Preload Script</b><br/>TypeScript · contextBridge<br/>only crossing point"}}
+        main["<b>Main Process</b><br/>Node.js · Sharp · Potrace<br/>pipeline · I/O · security"]
+
+        renderer -- "window.electronAPI" --> preload
+        preload == "ipcRenderer.invoke ⇄ ipcMain.handle" ==> main
+    end
+
+    fs[("📁 File System<br/>PNG in · SVG out")]
+
+    user -- uses --> renderer
+    main -- "read / write" --> fs
+
+    classDef proc fill:#E8F1FF,stroke:#2563EB,stroke-width:2px,color:#0F172A
+    classDef bridge fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#0F172A
+    classDef ext fill:#F1F5F9,stroke:#64748B,stroke-width:1px,stroke-dasharray:4 3,color:#0F172A
+    classDef actor fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A
+
+    class renderer,main proc
+    class preload bridge
+    class fs ext
+    class user actor
+```
+
+Key architectural decisions:
+- Renderer is sandboxed — no Node, no fs, no raw IPC (`nodeIntegration: false`, `contextIsolation: true`) — [ADR 0002](docs/adr/0002-context-isolation-and-preload-api.md)
+- Dual build: `tsc` for main process, Vite for renderer — [ADR 0003](docs/adr/0003-react-and-vite-for-renderer.md)
+- Per-file SVG cache keyed on options — avoids re-tracing on file switch — [ADR 0007](docs/adr/0007-options-based-svg-cache.md)
+- Tight viewBox via cubic Bezier extrema — editor-compatible output (Figma, Illustrator, Sketch) — [ADR 0010](docs/adr/0010-tight-viewbox-cubic-bezier.md)
+
+[Full architecture with sequence diagrams →](https://ViktoriaFox.github.io/Vektory/architecture)
+
+---
+
+## Screenshots
+
+**Before / After**
+
+| Original PNG | Converted SVG |
+|--------------|---------------|
+| ![Before](docs/assets/before-light.jpg) | ![After](docs/assets/after-light.jpg) |
+
+---
+
+## Download and install
+
+| Platform | File |
+|----------|------|
+| Windows 10/11 (64-bit) | [Vektory-1.0.0.exe](../../releases/latest/download/Vektory-1.0.0.exe) |
+| macOS 12+ (Intel + Apple Silicon) | [Vektory-1.0.0.dmg](../../releases/latest/download/Vektory-1.0.0.dmg) |
+
+Both binaries are unsigned — see the [Install Guide](https://ViktoriaFox.github.io/Vektory/install) for SmartScreen and Gatekeeper workarounds.
+
+---
+
+## Technical stack
+
+| Layer | Technology |
+|-------|-----------|
+| Desktop shell | Electron 38 |
+| Language | TypeScript 5 |
+| Renderer UI | React 19 |
+| Bundler (renderer) | Vite 7 |
+| State management | Zustand 5 |
+| UI primitives | Radix UI |
+| Image processing | Sharp 0.32 |
+| Vectorization | Potrace 2.1 |
+
+---
+
+## Architectural decision records
+
+Selected architectural decisions — the non-obvious ones:
+
+| ADR | Decision |
+|-----|----------|
+| [0002](docs/adr/0002-context-isolation-and-preload-api.md) | Context isolation and preload-only IPC API |
+| [0007](docs/adr/0007-options-based-svg-cache.md) | Options-based SVG cache invalidation |
+| [0008](docs/adr/0008-dual-independent-view-state.md) | Dual independent view state (SVG vs Original) |
+| [0010](docs/adr/0010-tight-viewbox-cubic-bezier.md) | Tight SVG viewBox via cubic Bezier extrema |
+
+[All ten ADRs on the docs site →](https://ViktoriaFox.github.io/Vektory/adr/)
+
+---
+
+## Documentation
+
+- [Architecture](https://ViktoriaFox.github.io/Vektory/architecture) — container diagram, sequence diagrams, design decisions
+- [ADRs](https://ViktoriaFox.github.io/Vektory/adr/) — ten architectural decision records
+- [Install Guide](https://ViktoriaFox.github.io/Vektory/install) — download and installation steps
+- [Settings Guide](https://ViktoriaFox.github.io/Vektory/settings-guide) — full parameter reference
+- [Changelog](https://ViktoriaFox.github.io/Vektory/CHANGELOG) — v1.0 release notes
+
+---
+
+## License
+
+Documentation: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — Viktoria Neva, 2026  
+Application binaries: Proprietary — all rights reserved
