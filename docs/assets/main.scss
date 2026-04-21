@@ -1,0 +1,19 @@
+---
+---
+@import "minima";
+
+.btn {
+  display: inline-block;
+  padding: 0.4em 1em;
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  text-decoration: none;
+  margin: 0.2em 0.1em;
+  font-size: 0.9em;
+  color: inherit;
+}
+
+.btn:hover {
+  border-color: #888;
+  text-decoration: none;
+}

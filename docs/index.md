@@ -9,7 +9,7 @@ A desktop application for converting PNG images to SVG using the Potrace vectori
 
 This is a **v1 portfolio project** — the goal is to demonstrate architectural thinking: how the Electron process boundary is designed, how state is structured, how the conversion pipeline is organized. The source code is private; this site documents the decisions.
 
-[Download for Windows or macOS](../../releases/latest){: .btn} [Architecture](architecture){: .btn} [ADRs](adr/){: .btn}
+[Download for Windows or macOS](https://github.com/ViktoriaFox/Vektory-Application/releases/latest){: .btn} [Architecture](architecture){: .btn} [ADRs](adr/){: .btn}
 
 ---
 

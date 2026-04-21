@@ -5,7 +5,7 @@ title: Install Guide
 
 # Install Guide
 
-Download the latest release from the [Releases page](../../releases/latest).
+Download the latest release from the [Releases page](https://github.com/ViktoriaFox/Vektory-Application/releases/latest).
 
 | Platform | File | 
 |----------|------|
@@ -30,7 +30,7 @@ When you run the installer, SmartScreen may show:
 
 Click **"More info"** → **"Run anyway"**.
 
-This warning appears because the binary is not signed with a paid Windows EV code-signing certificate. The binary is built from source using GitHub Actions — you can inspect the build log in the [Actions tab](../../actions) of this repository.
+This warning appears because the binary is not signed with a paid Windows EV code-signing certificate. The binary is built from source using GitHub Actions — you can inspect the build log in the [Actions tab](https://github.com/ViktoriaFox/Vektory-Application/actions) of this repository.
 
 ### Uninstall
 
@@ -80,4 +80,4 @@ Then open Vektory normally.
 
 ### Why Gatekeeper shows a warning
 
-The binary is built on a GitHub Actions macOS runner and is not notarised. Notarisation requires a paid Apple Developer account ($99/year). You can inspect the build log in the [Actions tab](../../actions).
+The binary is built on a GitHub Actions macOS runner and is not notarised. Notarisation requires a paid Apple Developer account ($99/year). You can inspect the build log in the [Actions tab](https://github.com/ViktoriaFox/Vektory-Application/actions).
