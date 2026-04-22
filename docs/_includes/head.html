@@ -10,6 +10,56 @@
     {%- include google-analytics.html -%}
   {%- endif -%}
 
+  <style>
+    .mermaid {
+      overflow-x: auto;
+      text-align: center;
+      margin: 1.5em 0;
+      background: #fff;
+      padding: 1em;
+      border-radius: 6px;
+    }
+    .mermaid svg {
+      max-width: none !important;
+      height: auto;
+      cursor: zoom-in;
+    }
+    .mermaid-zoom-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-out;
+      padding: 2em;
+    }
+    .mermaid-zoom-overlay svg {
+      max-width: 95vw;
+      max-height: 95vh;
+      width: auto;
+      height: auto;
+    }
+  </style>
+
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      flowchart: { htmlLabels: true, useMaxWidth: false },
+      sequence: { useMaxWidth: false }
+    });
+
+    document.addEventListener('click', function(e) {
+      const container = e.target.closest('.mermaid');
+      if (!container || e.target.closest('.mermaid-zoom-overlay')) return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'mermaid-zoom-overlay';
+      overlay.innerHTML = svg.outerHTML;
+      overlay.addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+    });
+  </script>
 </head>

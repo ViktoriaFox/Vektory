@@ -13,19 +13,19 @@ Vektory follows Electron's three-process model with a strict security boundary: 
 
 <pre class="mermaid">
 flowchart LR
-    user(["👤 Designer<br/><b>converting PNG → SVG</b>"])
+    user(["👤 Designer<br>converting PNG → SVG"])
 
     subgraph app["🖥️ Vektory Desktop Application"]
         direction TB
-        renderer["<b>Renderer Process</b><br/>React · Zustand · Vite<br/>UI · state · live preview"]
-        preload{{"🔒 <b>Preload Script</b><br/>TypeScript · contextBridge<br/>only crossing point"}}
-        main["<b>Main Process</b><br/>Node.js · Sharp · Potrace<br/>pipeline · I/O · security"]
+        renderer["Renderer Process<br>React · Zustand · Vite<br>UI · state · live preview"]
+        preload{{"🔒 Preload Script<br>TypeScript · contextBridge<br>only crossing point"}}
+        main["Main Process<br>Node.js · Sharp · Potrace<br>pipeline · I/O · security"]
 
         renderer -- "window.electronAPI" --> preload
         preload == "ipcRenderer.invoke ⇄ ipcMain.handle" ==> main
     end
 
-    fs[("📁 File System<br/>PNG in · SVG out")]
+    fs[("📁 File System<br>PNG in · SVG out")]
 
     user -- uses --> renderer
     main -- "read / write" --> fs
