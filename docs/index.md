@@ -3,8 +3,6 @@ layout: home
 title: Vektory
 ---
 
-# Vektory
-
 A desktop application for converting PNG images to SVG using the Potrace vectorization algorithm. Built with Electron, TypeScript, React, and Vite.
 
 This is a **v1 portfolio project** — the goal is to demonstrate architectural thinking: how the Electron process boundary is designed, how state is structured, how the conversion pipeline is organized. The source code is private; this site documents the decisions.
