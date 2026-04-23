@@ -183,23 +183,39 @@ code {
   font-size: 0.9em;
 }
 
-// All Rouge wrappers + plain pre — dark background
-pre,
-pre.highlight,
-div.highlight,
-figure.highlight,
-.highlighter-rouge,
-.highlighter-rouge .highlight {
-  background: rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid #3A3350 !important;
+// Rouge outputs nested wrappers: .highlighter-rouge > .highlight > pre > code
+// Apply the frame ONCE on the outermost; make inner containers pass-through
+.highlighter-rouge {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #3A3350;
   border-radius: 6px;
-  color: #ECEAF2 !important;
-}
-
-pre, pre.highlight {
   padding: 1em;
   overflow-x: auto;
   line-height: 1.5;
+  margin: 1em 0;
+}
+
+.highlighter-rouge .highlight,
+.highlighter-rouge pre,
+.highlighter-rouge pre.highlight,
+figure.highlight,
+figure.highlight pre {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #ECEAF2 !important;
+}
+
+// Plain <pre> without Rouge wrapper — also needs the frame
+pre:not(.highlight):not([class*="language-"]) {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #3A3350;
+  border-radius: 6px;
+  padding: 1em;
+  overflow-x: auto;
+  line-height: 1.5;
+  color: #ECEAF2;
 }
 
 pre code,

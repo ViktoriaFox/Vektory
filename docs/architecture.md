@@ -11,7 +11,7 @@ Vektory follows Electron's three-process model with a strict security boundary: 
 
 ## Containers
 
-![Vektory architecture — Designer interacts with the Renderer process; the Preload script is the only bridge between Renderer and Main; Main owns Sharp, Potrace, and all file system access](assets/architecture.png)
+![Vektory architecture — Designer interacts with the Renderer process; the Preload script is the only bridge between Renderer and Main; Main owns Sharp, Potrace, and all file system access](assets/architecture.svg)
 
 - `nodeIntegration: false`, `contextIsolation: true` — renderer cannot touch Node or IPC directly
 - Preload exposes two patterns: `invoke()` for renderer-initiated calls; `on()` callbacks for main-pushed events (menu actions)
