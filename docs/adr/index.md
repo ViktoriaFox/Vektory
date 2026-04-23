@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Architecture Decision Records
+nav_title: ADRs
 ---
 
 # Architecture Decision Records

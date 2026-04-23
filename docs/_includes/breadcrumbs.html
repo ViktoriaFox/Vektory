@@ -1,0 +1,12 @@
+{% unless page.url == "/" %}
+<nav class="breadcrumbs" aria-label="breadcrumb">
+  <a href="{{ "/" | relative_url }}">Home</a>
+  {% assign is_adr_page = page.url | slice: 0, 5 %}
+  {% if is_adr_page == "/adr/" and page.url != "/adr/" %}
+    <span class="crumb-sep">›</span>
+    <a href="{{ "/adr/" | relative_url }}">ADRs</a>
+  {% endif %}
+  <span class="crumb-sep">›</span>
+  <span class="crumb-current">{{ page.nav_title | default: page.title }}</span>
+</nav>
+{% endunless %}

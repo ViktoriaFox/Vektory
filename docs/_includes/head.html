@@ -1,0 +1,177 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="{{ "/assets/favicon.png" | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ "/assets/favicon.png" | relative_url }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+
+  {%- seo -%}
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  {%- feed_meta -%}
+  {%- if jekyll.environment == 'production' and site.google_analytics -%}
+    {%- include google-analytics.html -%}
+  {%- endif -%}
+
+  <style>
+    .mermaid {
+      text-align: center;
+      margin: 1.5em 0;
+      background: #fff;
+      padding: 1em;
+      border-radius: 6px;
+      cursor: zoom-in;
+      position: relative;
+    }
+    .mermaid::after {
+      content: "⤢ click to enlarge";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 11px;
+      color: #999;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.3px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .mermaid-zoom-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-out;
+      padding: 2em;
+    }
+    .mermaid-zoom-overlay svg,
+    .mermaid-zoom-overlay img {
+      max-width: 95vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      background: #1e182c;
+      padding: 1.5em;
+      border-radius: 6px;
+      border: 1px solid rgba(138, 117, 200, 0.22);
+    }
+    .page-content img {
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .page-content img:hover {
+      opacity: 0.92;
+    }
+    .mermaid-zoom-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    .mermaid-zoom-close:hover {
+      background: rgba(224, 192, 106, 0.3);
+      border-color: #8A75C8;
+      color: #8A75C8;
+    }
+    .mermaid-zoom-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      pointer-events: none;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      securityLevel: 'loose',
+      flowchart: { htmlLabels: true, useMaxWidth: true },
+      sequence: { useMaxWidth: true },
+      themeVariables: {
+        background: '#1e182c',
+        primaryColor: '#2a2240',
+        primaryTextColor: '#ECEAF2',
+        primaryBorderColor: '#8A75C8',
+        lineColor: '#8F8AA3',
+        secondaryColor: '#3a3050',
+        tertiaryColor: '#241e34',
+        mainBkg: '#2a2240',
+        secondBkg: '#3a3050',
+        textColor: '#ECEAF2',
+        /* sequence diagram */
+        actorBkg: '#2a2240',
+        actorBorder: '#8A75C8',
+        actorTextColor: '#ECEAF2',
+        actorLineColor: '#8F8AA3',
+        signalColor: '#C1BDD2',
+        signalTextColor: '#ECEAF2',
+        labelBoxBkgColor: '#3a3050',
+        labelBoxBorderColor: '#8A75C8',
+        labelTextColor: '#ECEAF2',
+        loopTextColor: '#C1BDD2',
+        noteBkgColor: '#3a3050',
+        noteTextColor: '#ECEAF2',
+        noteBorderColor: '#8A75C8',
+        activationBorderColor: '#8A75C8',
+        activationBkgColor: '#3a3050',
+        sequenceNumberColor: '#D8B96A'
+      }
+    });
+
+    function closeOverlay() {
+      const o = document.querySelector('.mermaid-zoom-overlay');
+      if (o) o.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+    function escHandler(e) { if (e.key === 'Escape') closeOverlay(); }
+
+    function openZoom(contentHtml) {
+      const overlay = document.createElement('div');
+      overlay.className = 'mermaid-zoom-overlay';
+      overlay.innerHTML = contentHtml +
+        '<button class="mermaid-zoom-close" title="Close (Esc)">✕</button>' +
+        '<div class="mermaid-zoom-hint">click anywhere or press Esc to close</div>';
+      overlay.addEventListener('click', closeOverlay);
+      document.body.appendChild(overlay);
+      document.addEventListener('keydown', escHandler);
+    }
+
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.mermaid-zoom-overlay')) return;
+      const mermaid = e.target.closest('.mermaid');
+      if (mermaid) {
+        const svg = mermaid.querySelector('svg');
+        if (svg) openZoom(svg.outerHTML);
+        return;
+      }
+      const img = e.target.closest('.page-content img');
+      if (img) openZoom('<img src="' + img.src + '" alt="' + (img.alt || '') + '">');
+    });
+  </script>
+</head>

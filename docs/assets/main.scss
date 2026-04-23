@@ -1,19 +1,397 @@
 ---
 ---
+
+// Wider content
+$content-width: 1100px;
+
+// ============================================================================
+// Palette matches Vektory app's dark-mode design tokens from styles.css
+// --accent-primary is the purple (#8A75C8), --brand-gold is the dim gold (#D8B96A).
+// Gold is reserved for brand/logo treatments only — logo, author name.
+// ============================================================================
+
+// Minima variable overrides
+$text-color: #ECEAF2;
+$background-color: #15101F;
+$brand-color: #8A75C8;
+$grey-color: #8F8AA3;
+$grey-color-light: #2C2640;
+$grey-color-dark: #ECEAF2;
+
 @import "minima";
 
+// Global background
+body {
+  background: linear-gradient(135deg, #15101F 0%, #1a1428 50%, #1f1730 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #ECEAF2;
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+.site-header {
+  border-top: none;
+  border-bottom: 1px solid rgba(138, 117, 200, 0.22);
+  background: rgba(30, 24, 44, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-height: 72px;
+}
+
+// Site title — matches app Header: gold wolf logo + lavender Tangerine cursive
+.site-title, .site-title:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  color: inherit;
+  line-height: 1;
+  padding: 10px 0;
+  margin-right: 0.5em;
+  font-weight: normal;
+}
+
+.site-logo {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  color: #D8B96A;
+  flex-shrink: 0;
+}
+
+.site-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.site-title-text {
+  font-family: 'Tangerine', cursive;
+  font-weight: 400;
+  font-size: 3rem;
+  color: #C1BDD2;
+  opacity: 0.92;
+  line-height: 1;
+  margin-left: -0.1em;
+  font-style: normal;
+  letter-spacing: 0;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.site-title:hover .site-title-text {
+  color: #ECEAF2;
+  opacity: 1;
+  text-decoration: none;
+}
+
+// Nav links — lavender (primary text)
+.site-nav .page-link {
+  color: #ECEAF2;
+}
+
+.site-nav .page-link:hover {
+  color: #9A86D8;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+  .site-nav {
+    background-color: rgba(30, 24, 44, 0.95);
+    border: 1px solid rgba(138, 117, 200, 0.22);
+  }
+  .site-nav .menu-icon > svg path {
+    fill: #ECEAF2;
+  }
+}
+
+// ============================================================================
+// LINKS — purple accent (not gold)
+// ============================================================================
+a, a:visited {
+  color: #8A75C8;
+}
+
+a:hover {
+  color: #9A86D8;
+  text-decoration: underline;
+}
+
+// ============================================================================
+// TYPOGRAPHY
+// ============================================================================
+h1, h2, h3, h4, h5, h6 {
+  color: #ECEAF2;
+  letter-spacing: -0.2px;
+}
+
+h1 { font-weight: 700; }
+
+h2 {
+  border-bottom: 1px solid rgba(138, 117, 200, 0.22);
+  padding-bottom: 0.3em;
+  margin-top: 1.5em;
+}
+
+h3 {
+  color: #C1BDD2;
+}
+
+p, li {
+  color: #C1BDD2;
+}
+
+strong {
+  color: #ECEAF2;
+}
+
+em {
+  color: #8F8AA3;
+}
+
+// ============================================================================
+// DIVIDERS
+// ============================================================================
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(138, 117, 200, 0.38), transparent);
+  margin: 2em 0;
+}
+
+// ============================================================================
+// BLOCKQUOTE
+// ============================================================================
+blockquote {
+  border-left: 3px solid #8A75C8;
+  color: #8F8AA3;
+  background: rgba(138, 117, 200, 0.06);
+  padding: 0.5em 1em;
+  font-style: normal;
+}
+
+// ============================================================================
+// CODE — dark theme override (Rouge syntax highlighter)
+// ============================================================================
+code {
+  background: rgba(138, 117, 200, 0.1);
+  color: #ECEAF2;
+  border: 1px solid #3A3350;
+  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  font-size: 0.9em;
+}
+
+// All Rouge wrappers + plain pre — dark background
+pre,
+pre.highlight,
+div.highlight,
+figure.highlight,
+.highlighter-rouge,
+.highlighter-rouge .highlight {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #3A3350 !important;
+  border-radius: 6px;
+  color: #ECEAF2 !important;
+}
+
+pre, pre.highlight {
+  padding: 1em;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+pre code,
+code.highlighter-rouge,
+.highlight code {
+  background: transparent !important;
+  border: none !important;
+  color: #ECEAF2 !important;
+  padding: 0;
+}
+
+// Rouge syntax highlighting — lavender/purple dark theme
+.highlight {
+  .c, .cm, .c1, .cs, .cd { color: #8F8AA3; font-style: italic; } // comments
+  .err { color: #ff6b7a; }
+  .k, .kc, .kd, .kn, .kr, .kt, .kv { color: #9A86D8; font-weight: 500; } // keywords — purple
+  .kp { color: #9A86D8; }
+  .o, .ow { color: #C1BDD2; } // operators
+  .s, .sb, .sc, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss, .sd { color: #B8D4A8; } // strings — soft green
+  .m, .mf, .mh, .mi, .mo, .mb, .mx { color: #D8B96A; } // numbers — soft gold
+  .n, .na, .nc, .nd, .ne, .nf, .nl, .nn, .nv, .nx, .py, .vc, .vg, .vi { color: #ECEAF2; } // names — primary
+  .nb, .bp { color: #9A86D8; } // builtins — purple
+  .nt { color: #D8B96A; } // tags / flags (like -d, --arg) — soft gold
+  .p { color: #ECEAF2; } // punctuation
+  .gd { color: #ff6b7a; background: rgba(255, 107, 122, 0.1); } // diff deletion
+  .gi { color: #7F9E90; background: rgba(127, 158, 144, 0.1); } // diff insertion
+  .gh, .gu { color: #9A86D8; font-weight: 600; } // diff headers
+}
+
+// ============================================================================
+// TABLES
+// ============================================================================
+table {
+  color: #C1BDD2;
+  background: rgba(30, 24, 44, 0.6);
+  border: 1px solid #3A3350;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+table th {
+  background: rgba(138, 117, 200, 0.14);
+  color: #ECEAF2;
+  border-color: #3A3350;
+  font-weight: 600;
+}
+
+table td {
+  border-color: #2C2640;
+  color: #C1BDD2;
+}
+
+table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+// ============================================================================
+// FOOTER
+// ============================================================================
+.site-footer {
+  border-top: 1px solid rgba(138, 117, 200, 0.22);
+  background: rgba(30, 24, 44, 0.75);
+  color: #8F8AA3;
+  padding: 2em 0;
+}
+
+.site-footer p, .site-footer li, .site-footer a {
+  color: #8F8AA3;
+}
+
+.site-footer a:hover {
+  color: #9A86D8;
+}
+
+// Author name in footer — GOLD (the only other gold accent)
+.footer-name {
+  color: #D8B96A;
+  font-weight: 500;
+}
+
+.footer-col-wrapper {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+  margin-left: 0 !important;
+}
+
+.footer-col {
+  float: none !important;
+  padding-left: 0 !important;
+  width: auto !important;
+  margin-bottom: 0 !important;
+}
+
+.footer-col:first-child {
+  text-align: left;
+}
+
+.footer-col:last-child {
+  text-align: right;
+}
+
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .footer-col-wrapper {
+    grid-template-columns: 1fr !important;
+  }
+  .footer-col:last-child {
+    text-align: left;
+  }
+}
+
+// ============================================================================
+// BUTTONS — purple accent
+// ============================================================================
 .btn {
   display: inline-block;
-  padding: 0.4em 1em;
+  padding: 0.5em 1.2em;
   border-radius: 5px;
-  border: 1px solid #bbb;
-  text-decoration: none;
+  border: 1px solid #8A75C8;
+  background: rgba(138, 117, 200, 0.1);
+  color: #ECEAF2 !important;
+  text-decoration: none !important;
   margin: 0.2em 0.1em;
   font-size: 0.9em;
-  color: inherit;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.15s ease;
 }
 
 .btn:hover {
-  border-color: #888;
+  background: rgba(138, 117, 200, 0.22);
+  border-color: #9A86D8;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+// ============================================================================
+// PAGE LAYOUT
+// ============================================================================
+.page-content {
+  padding: 2em 0;
+}
+
+// ============================================================================
+// BREADCRUMBS
+// ============================================================================
+.breadcrumbs {
+  font-size: 13px;
+  color: #8F8AA3;
+  margin-bottom: 1.5em;
+  letter-spacing: 0.2px;
+}
+
+.breadcrumbs a {
+  color: #8F8AA3;
   text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  color: #9A86D8;
+  text-decoration: none;
+}
+
+.breadcrumbs .crumb-sep {
+  margin: 0 0.5em;
+  color: #3A3350;
+}
+
+.breadcrumbs .crumb-current {
+  color: #C1BDD2;
+}
+
+// ============================================================================
+// MERMAID — dark surface matching app's --bg-surface
+// ============================================================================
+.mermaid {
+  background: rgba(30, 24, 44, 0.6) !important;
+  padding: 1.5em !important;
+  border-radius: 8px !important;
+  border: 1px solid #3A3350 !important;
+}
+
+// ============================================================================
+// IMAGES
+// ============================================================================
+img {
+  border-radius: 6px;
+  max-width: 100%;
 }
