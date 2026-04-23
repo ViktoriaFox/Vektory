@@ -3,13 +3,11 @@ layout: home
 title: Vektory
 ---
 
-# Vektory
-
 A desktop application for converting PNG images to SVG using the Potrace vectorization algorithm. Built with Electron, TypeScript, React, and Vite.
 
 This is a **v1 portfolio project** — the goal is to demonstrate architectural thinking: how the Electron process boundary is designed, how state is structured, how the conversion pipeline is organized. The source code is private; this site documents the decisions.
 
-[Download for Windows or macOS](https://github.com/ViktoriaFox/Vektory-Application/releases/latest){: .btn} [Architecture](architecture){: .btn} [ADRs](adr/){: .btn}
+[Download for Windows or macOS](https://github.com/ViktoriaFox/Vektory/releases/latest){: .btn} [Architecture](architecture){: .btn} [ADRs](adr/){: .btn}
 
 ---
 
@@ -33,7 +31,7 @@ This is a **v1 portfolio project** — the goal is to demonstrate architectural 
 
 | Platform | File |
 |----------|------|
-| Windows 10/11 (64-bit) | [Vektory-1.0.0.exe](../../releases/latest/download/Vektory-1.0.0.exe) |
-| macOS 12+ (Intel + Apple Silicon) | [Vektory-1.0.0.dmg](../../releases/latest/download/Vektory-1.0.0.dmg) |
+| Windows 10/11 (64-bit) | [Vektory-1.0.0.exe](https://github.com/ViktoriaFox/Vektory/releases/latest/download/Vektory-1.0.0.exe) |
+| macOS 12+ (Intel + Apple Silicon) | [Vektory-1.0.0-universal.dmg](https://github.com/ViktoriaFox/Vektory/releases/latest/download/Vektory-1.0.0-universal.dmg) |
 
 See the [Install Guide](install) for SmartScreen and Gatekeeper workarounds (the binaries are unsigned).
