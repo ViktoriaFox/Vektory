@@ -15,7 +15,7 @@ jobs:
       - name: Checkout private source
         uses: actions/checkout@v4
         with:
-          repository: ViktoriaFox/Vektory   # your private repo (owner/repo)
+          repository: ViktoriaFox/Vektory-Application   # private source repo (owner/repo)
           token: ${{ secrets.SOURCE_REPO_PAT }}
           ref: ${{ github.ref_name }}
 
@@ -45,7 +45,7 @@ jobs:
       - name: Checkout private source
         uses: actions/checkout@v4
         with:
-          repository: ViktoriaFox/Vektory   # your private repo (owner/repo)
+          repository: ViktoriaFox/Vektory-Application   # private source repo (owner/repo)
           token: ${{ secrets.SOURCE_REPO_PAT }}
           ref: ${{ github.ref_name }}
 

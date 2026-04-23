@@ -11,35 +11,7 @@ Vektory follows Electron's three-process model with a strict security boundary: 
 
 ## Containers
 
-<pre class="mermaid">
-flowchart LR
-    user(["👤 Designer<br/><b>converting PNG → SVG</b>"])
-
-    subgraph app["🖥️ Vektory Desktop Application"]
-        direction TB
-        renderer["<b>Renderer Process</b><br/>React · Zustand · Vite<br/>UI · state · live preview"]
-        preload{{"🔒 <b>Preload Script</b><br/>TypeScript · contextBridge<br/>only crossing point"}}
-        main["<b>Main Process</b><br/>Node.js · Sharp · Potrace<br/>pipeline · I/O · security"]
-
-        renderer -- "window.electronAPI" --> preload
-        preload == "ipcRenderer.invoke ⇄ ipcMain.handle" ==> main
-    end
-
-    fs[("📁 File System<br/>PNG in · SVG out")]
-
-    user -- uses --> renderer
-    main -- "read / write" --> fs
-
-    classDef proc fill:#E8F1FF,stroke:#2563EB,stroke-width:2px,color:#0F172A
-    classDef bridge fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#0F172A
-    classDef ext fill:#F1F5F9,stroke:#64748B,stroke-width:1px,stroke-dasharray:4 3,color:#0F172A
-    classDef actor fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#0F172A
-
-    class renderer,main proc
-    class preload bridge
-    class fs ext
-    class user actor
-</pre>
+![Vektory architecture — Designer interacts with the Renderer process; the Preload script is the only bridge between Renderer and Main; Main owns Sharp, Potrace, and all file system access](assets/architecture.png)
 
 - `nodeIntegration: false`, `contextIsolation: true` — renderer cannot touch Node or IPC directly
 - Preload exposes two patterns: `invoke()` for renderer-initiated calls; `on()` callbacks for main-pushed events (menu actions)
