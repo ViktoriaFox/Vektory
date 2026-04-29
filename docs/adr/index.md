@@ -6,10 +6,6 @@ nav_title: ADRs
 
 # Architecture Decision Records
 
-These records document the key design decisions made during development of Vektory. Each ADR captures the context, the decision, and its consequences, including trade-offs consciously accepted.
-
-The numbering reflects the order in which the decisions were made. Reading them in order tracks the architectural narrative, runtime first, then security, then the libraries that justified the runtime, then UI, then state and algorithms, with scope-freeze and the last preprocessing fix at the end. ADR 0014 documents the testing strategy that runs through all of them.
-
 | # | Title | Decision |
 |---|-------|----------|
 | [0001](0001-electron-and-typescript) | Electron and TypeScript | Single codebase (Win/macOS) using Electron; TypeScript throughout for shared types between main and renderer |

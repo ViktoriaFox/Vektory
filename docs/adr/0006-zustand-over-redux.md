@@ -5,6 +5,8 @@ title: "ADR 0006: Zustand over Redux, a sunk-cost-aware trade-off"
 
 # ADR 0006: Zustand over Redux, a sunk-cost-aware trade-off
 
+> **Decision:** Stay on Zustand after a failed Redux migration attempt. **Why:** The migration cost — broken persist middleware, re-typed slices, changed store shape — was visibly larger than any benefit Redux would have added.
+
 ## Context
 
 Early in the project I needed app-wide state for conversion options, theme, file list, and preview view state. I picked **Zustand** without running a deep comparison against Redux, Jotai, or Context. I wanted momentum, the store needed to exist in an afternoon, not a week.
@@ -48,8 +50,6 @@ When I reverted the Redux prototype,  I had been learning, by contrast, what Zus
 - The initial pick was unexamined. If I had picked Redux first and later tried to move to Zustand, I'd probably have stayed on Redux for the same reason.
 - The devtools story is weaker than Redux DevTools. I have not felt the gap enough to pay the migration tax, but it is a real trade-off.
 
-
-**Looks like architecture is not just the first decision, it's also the decisions you make about *not* re-deciding.**
 
 Writing this ADR honestly mattered because the portfolio-genre temptation is to say *"I weighed Zustand, Redux, and Jotai, and chose Zustand for reasons X, Y, Z."* But that is not what happened. What happened is: picked fast, tried to migrate later, found the migration wasn't worth it, and made staying a considered call.
 

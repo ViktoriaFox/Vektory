@@ -5,6 +5,8 @@ title: "ADR 0014: Risk-based testing strategy"
 
 # ADR 0014: Risk-based testing strategy
 
+> **Decision:** Automate the deterministic and security-critical surfaces (conversion pipeline, SVG sanitisation, file path safety); validate visual UX manually. **Why:** Line coverage and bug coverage are weakly correlated — over-testing the visual layer produces ceremony tests that catch shape changes, not behaviour.
+
 ## Context
 
 The test suite expresses what *kind* of failures the architect is willing to ship, and which kinds they want to be told about before they reach a user. For Vektory, those choices were made deliberately, shaped by the part of my background most relevant to this question: I have spent years in QA before pivoting to architecture.

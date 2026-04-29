@@ -5,6 +5,8 @@ title: "ADR 0007: Per-File Options with Selective Persistence"
 
 # ADR 0007: Per-file conversion options with selective persistence
 
+> **Decision:** Dual-layer options model (global defaults + per-file overrides) with a strict persist allowlist (`themeMode`, `showEditor` only). **Why:** Batch processing requires per-file tuning; restoring session state on relaunch causes more confusion than it saves.
+
 ## Context
 
 The app started single-file: one image, one set of conversion options (threshold, corner policy, artifact area, smoothness, path optimisation), one preview. The store held a single `conversionOptions` object bound to the UI controls, and that was enough.
@@ -44,8 +46,6 @@ Everything else is session-scoped by design:
 - `conversionOptions` and `fileOptionsByPath`, bound to the files in the current session. Restoring them would mean restoring settings for files that may no longer exist, or misapplying them to a fresh batch.
 - File list, restoring it would show the user a list of files from a previous working context, possibly moved, renamed, or irrelevant now.
 - SVG cache, regenerable from source + options. Persisting it would add disk overhead for no functional benefit.
-
-A user who wants to keep a particular options set across sessions uses Presets instead, that is a separate, explicit mechanism, and the right tool for durable configuration.
 
 ## Consequences
 

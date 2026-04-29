@@ -5,6 +5,8 @@ title: "ADR 0008: Options-Based SVG Cache Invalidation"
 
 # ADR 0008: Options-based SVG cache invalidation
 
+> **Decision:** Cache each file's SVG keyed on `(filePath, JSON.stringify(options))`, stored in the renderer Zustand store. **Why:** Eliminates redundant 100–500 ms conversions on file switch; keeping the cache renderer-side avoids an IPC round-trip on every switch.
+
 ## Context
 
 Converting a PNG with Sharp + Potrace is CPU-bound and takes 100–500 ms per file depending on size and complexity. When a user switches between files in a batch, re-running the full conversion even when nothing changed was wasteful and made the UI feel slow.
@@ -51,7 +53,7 @@ Main is intentionally stateless about UI: it converts on request, returns SVG, d
 
 **Negative**
 - Object key order must be consistent for `JSON.stringify` equality to hold. Options objects are always constructed from the same shape, making this safe in practice, but it is an invariant that depends on construction discipline.
-- **Silent stale on `ConversionOptions` shape changes.** If a I would add a field to `ConversionOptions` (a new tuning parameter, an experimental flag), every existing cache entry is structurally different from new ones. The serialised form changes, equality fails, every file re-converts on next switch. This is *correct* behaviour, the conversion would actually produce different output once the field is wired into the pipeline, but: there is no warning that the entire session-level cache just invalidated. For a session-scoped cache rebuilt within seconds of use, this is acceptable; if the cache ever gains persistence (cross-session, on-disk), shape changes would need a versioned key to avoid silently re-converting hundreds of files on first launch after an update.
+- **Silent stale on `ConversionOptions` shape changes.** Adding a field to `ConversionOptions` invalidates every existing cache entry — the serialised form changes, equality fails, every file re-converts on next switch. Correct behaviour, but silent. Acceptable for a session-scoped cache; if the cache ever gains persistence, shape changes would need a versioned key to avoid silently re-converting everything on first launch after an update.
 - **External-edit invalidation gap.** The cache key is `(filePath, options)`. The file *content* is not part of the key. If the user opens a PNG in Vektory, then edits the same file in an external tool (Photoshop, GIMP, in-place save from another image editor) while it is still in Vektory's working set, the path is unchanged and the options are unchanged, so on the next file switch the cache returns the SVG generated from the *previous* PNG content. The stale result looks correct (no error, no warning) until the user notices that the preview doesn't match what is on disk.
 Today's workaround is to re-add the file to the working set, which forces a fresh conversion. The proper fix is to include the file's `mtime` (modification timestamp) in the cache key, one `fs.stat` per file switch, effectively zero cost, and it is the standard signal desktop tools use for exactly this case. A content hash would also work but is heavier; `mtime` is the right level of investment.
 

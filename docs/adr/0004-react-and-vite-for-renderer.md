@@ -5,6 +5,8 @@ title: "ADR 0004: React and Vite for the Renderer"
 
 # ADR 0004: React and Vite for the renderer UI
 
+> **Decision:** React + Vite for the renderer. **Why:** Vite's HMR makes visual iteration sub-second; React's declarative model was the only practical escape from the imperative state glue that was breaking the Vanilla JS prototype.
+
 ## Context
 
 The renderer needs a reactive UI: file list, live conversion preview, parameter controls (sliders, toggles), and an SVG code editor. Two distinct pain points shaped the final stack.
@@ -19,7 +21,7 @@ The renderer needs a reactive UI: file list, live conversion preview, parameter 
 
 **UI framework:** stay on Vanilla JS vs rewrite in React. Staying would have meant building more of the coupling glue by hand, forever. React's component model, hooks, and reactive re-rendering map directly to the kind of UI this app is, many interdependent controls driving a single preview.
 
-Vue and Svelte were on the map briefly but did not make it to serious comparison. Radix UI, which was the primitives library I already wanted for accessibility and dark-theme control (ADR 0005), is React-only. That narrowed the choice.
+Radix UI, which was the primitives library I already wanted for accessibility and dark-theme control (ADR 0005), is React-only. That narrowed the choice.
 
 ## Decision
 
@@ -34,8 +36,6 @@ State management (Zustand) is covered in its own ADR (0006). The initial pick wa
 **Vite for UI work, specifically.** The UX of this app is tuned visually, not just logically. Gradients, opacity, border-radius, font weight at specific sizes, none of these are specced in advance, they are found by iteration. Vite's HMR keeps my hands on the tweak surface and my eyes on the result, same second. That is the dev-loop equivalent of the product decision in ADR 0012 (manual toggle with auto-detect opt-in): keep the explicit, fast path for the thing you do constantly, and don't let tooling friction accumulate. Webpack would have worked; the config overhead is real and would have slowed me down on every project-level change.
 
 **React over Vanilla JS, forced by scale.** I prefer small stacks. I would happily have stayed on Vanilla if the app's state had stayed simple. It did not. The rewrite was a response to pain I felt in the Vanilla version, hand-rolled subscription code, subtle update ordering bugs, long imperative chains to sync the UI with store changes. React replaces all of that with one model: state changes, components re-render, diffing handles the rest. At the scale of this app, that model is a net simplification, not a ceremony.
-
-**Ecosystem compounding.** Once React was in, the rest of the stack aligned naturally: Radix primitives (ADR 0005), Zustand for app state (ADR 0006), hooks as the composition unit throughout the renderer. No bridge code between mismatched frameworks. That alignment matters at this scale more than the incremental merits of any one library over a closest competitor.
 
 ## Consequences
 

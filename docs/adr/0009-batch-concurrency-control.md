@@ -5,6 +5,8 @@ title: "ADR 0009: Batch Concurrency Control"
 
 # ADR 0009: Batch conversion concurrency model
 
+> **Decision:** Groups-of-5 (`Promise.all` within each chunk, sequential across chunks). **Why:** A worker pool is over-engineering for batches of tens of files; fully parallel explodes memory on accidental large inputs. Groups-of-5 keeps memory bounded and the failure mode "slow and cancellable" instead of "dead."
+
 ## Context
 
 Batch export lets the user convert many PNGs to SVG in one run. The question was how to schedule those conversions: sequentially, fully in parallel, via a worker pool, or in bounded groups.
@@ -53,8 +55,6 @@ The method accepts either a single `ConversionOptions` (uniform across files) or
 **Groups-of-N degrades gracefully on accidental misuse.** If the user points the app at 5,000 PNGs by mistake, fully-parallel explodes immediately, thousands of Sharp decoders in flight before anyone notices. Groups-of-5 chugs: memory usage stays bounded to five concurrent conversions at any moment, the UI stays responsive, progress is visible, and the user can cancel. The failure mode is "slow and cancellable" instead of "dead." That is a deliberate blast-radius choice.
 
 **Why 5 specifically.** Tuning constant, found empirically. Small enough to bound memory on large images; big enough that 4× parallelism is meaningful on typical batches. The number is named (`batchSize`), not inlined, so future tuning is a one-line change.
-
-**`JSON.stringify` wasn't needed here, but the principle generalises.** Wherever a simpler primitive handles the scale I actually have, I prefer it over a more powerful primitive designed for a scale I don't. See also ADR 0008, where `JSON.stringify` comparison for cache invalidation was chosen over hashing for the same reason.
 
 ## Consequences
 

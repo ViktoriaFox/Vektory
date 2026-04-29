@@ -5,6 +5,8 @@ title: "ADR 0002: Context Isolation and Preload-only API"
 
 # ADR 0002: Context isolation and preload-only API for the renderer
 
+> **Decision:** Enable context isolation with a strict preload bridge. **Why:** Prevents renderer-level access to Node APIs and closes the XSS-to-filesystem privilege chain that is the core Electron threat.
+
 ## Context
 
 I come from a security background. When I build or review any application, I evaluate it through a security lens by default. With Electron that reflex matters especially: the default configuration is **permissive** in ways that most web tutorials don't flag clearly enough.
@@ -92,7 +94,7 @@ Each layer defends against a different failure mode:
 Every piece of data crossing the preload boundary is a serialized copy. I can't pass a class instance, a function, a live DOM node, or a Node stream. Architecturally it's the whole reason contextIsolation works: **object identity does not cross the boundary, so no exploit can escape by holding a reference**. I lean into this by defining all IPC payloads as plain serializable shapes in a shared `types.ts` (see [ADR 0001](0001-electron-and-typescript) for the contract-typing reason).
 
 **The IPC channels.**
-The set of `ipcMain.handle(...)` handlers in main: `convert-png-to-svg`, `batch-convert`, `save-svg`, `open-files`, `open-folder`, `validate-files`, `select-save-directory`, `get-file-info`, `find-png-files`, `check-paths-are-directories`, `batch-convert-and-save`. Each maps to a named method on `window.electronAPI`. Adding a capability requires deliberate work in three places, main handler, preload binding, renderer TypeScript type.
+11 named handlers, each mapping to a method on `window.electronAPI`. Adding a capability requires deliberate work in three places: main handler, preload binding, renderer TypeScript type.
 
 ## Consequences
 
@@ -104,25 +106,6 @@ The set of `ipcMain.handle(...)` handlers in main: `convert-png-to-svg`, `batch-
 **Negative**
 - **Every new capability costs three edits.** Main handler, preload binding, renderer type.
 - **Serializable-only contracts.** No passing class instances, functions, streams, or live references across the boundary. All IPC payloads must be plain JSON-serializable objects. Shapes need to be designed for serialization up front.
-
-## On DOMPurify, emergent through workflow, validated through review
-
-Vektory sanitizes SVG content with **DOMPurify** before injecting it into the DOM for live preview. This is the second defensive layer specifically against XSS via SVG:
-
-- **Context isolation** ensures that even if malicious JS runs in the renderer, it has no privileged Node/IPC access.
-- **DOMPurify** ensures that malicious SVG **doesn't run in the renderer at all**.
-
-Together: an attacker-supplied SVG can't execute, and even if sanitizer bypass existed, it couldn't escape the sandbox.
-
-How DOMPurify ended up in the codebase, this connects to a thread that runs through [ADR 0001](0001-electron-and-typescript) and [ADR 0011](0011-radix-over-mui-and-headless-ui). I did not explicitly plan "add DOMPurify." I grounded the LLM collaborating on the implementation in a **security-primed context**: contextIsolation as default, threat model articulated, hostile SVG input expected, XSS vectors named. Within that context, DOMPurify surfaced naturally as the model's suggestion for sanitizing SVG before DOM injection. I reviewed the fit against the threat model, verified the integration path, and accepted it.
-
-Which leads us to **good LLM grounding produces emergent architectural quality**. The discipline I invest in framing the problem pays back in architectural suggestions I wouldn't have explicitly planned. The LLM becomes a collaborator surfacing patterns within the context I've set up.
-
-This connects:
-- [ADR 0001](0001-electron-and-typescript): *"Pick tools I can review, keep the human in the loop."*
-- [ADR 0011](0011-radix-over-mui-and-headless-ui): *"Unopinionated tools require explicit discipline in the prompt."*
-- **This ADR**: *"Well-grounded security context surfaces emergent hardening, emergent through workflow, validated through review."*
-
 
 ## Follow-up
 

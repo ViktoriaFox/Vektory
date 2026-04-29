@@ -5,6 +5,8 @@ title: "ADR 0012: Dark Background Inversion"
 
 # ADR 0012: Dark background inversion preprocessing
 
+> **Decision:** Manual inversion toggle as default, optional auto-detect as opt-in. Pipeline order: `flatten → negate({ alpha: false }) → greyscale → threshold`. **Why:** Each step prevents a specific failure mode; reordering any of them reintroduces a known bug.
+
 ## Context
 
 Potrace traces dark pixels on a light background. Source images that are light-on-dark, white icons on a black canvas, white text on a dark photo, transparent PNGs with dark foregrounds, produce empty or incorrectly-traced SVGs by default. Potrace either finds nothing to trace, or traces the background as a filled rectangle.
@@ -34,7 +36,7 @@ I chose manual toggle as the default because as the primary user of the product,
 
 The optional auto-detection flag exists for batch flows where the user may not have pre-sorted their files. That path is heuristic (luminance analysis) and documented as such.
 
-This is a product decision, not just an architectural one. Shipping the simpler, more predictable UX first I avaluated as the smallest correct move for v1. If usage patterns show that most users hit the same toggle repeatedly, auto-detection becomes the next iteration, and the infrastructure for it is already in place.
+This is a product decision, not just an architectural one. Shipping the simpler, more predictable UX first I evaluated as the smallest correct move for v1. If usage patterns show that most users hit the same toggle repeatedly, auto-detection becomes the next iteration, and the infrastructure for it is already in place.
 
 ## Rationale, the pipeline order
 
@@ -47,12 +49,6 @@ Each step sits where it sits because of a specific failure mode I hit while debu
 The Potrace threshold is passed as an integer in the 0–255 range (`Math.round(options.threshold * 255)`), not as a float, another failure mode found by tracing unexpected output and working backwards.
 
 These three root causes were discovered sequentially, each from a different visible symptom: empty SVG, fully-filled rectangle, traces of noise instead of the subject. The final sequence is the minimal correct order that avoids all three failures. This ADR exists in large part so that future-me (or an LLM helping me) does not reorder the steps "for clarity" and reintroduce one of the bugs.
-
-## LLM-assisted debugging as a workflow
-
-This fix was not *"I asked an LLM to add inversion support and it worked."* It didn't, the pipeline was in a plausible-looking but broken order, in one or another way. Because the LLM has no way of knowing which sequence avoids which specific failure.
-
-What actually worked was root-cause decomposition, iterated. For each visible symptom I named the failure concretely and asked the LLM to propose causes. I tested candidate fixes against real broken inputs, kept what worked, and moved to the next symptom.
 
 ## Consequences
 

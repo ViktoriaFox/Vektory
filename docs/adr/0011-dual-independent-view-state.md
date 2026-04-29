@@ -5,6 +5,8 @@ title: "ADR 0011: Dual Independent View State"
 
 # ADR 0011: Dual independent view state (SVG vs Original)
 
+> **Decision:** Two independent `ViewState` objects — one for SVG, one for Original — rather than a shared viewport. **Why:** Shared state made compare-at-detail workflows unusable: zooming into a curve in SVG view then flipping to Original would misalign the position entirely.
+
 ## Context
 
 The preview area can display either the converted SVG or the original PNG. The pain came up during implementation testing, not from a spec. The first version of the preview shared a single zoom/pan state between the SVG and Original views. The moment I tried to compare a detail, zoom into a curve in the SVG, then flip to Original to check whether the source PNG had a sharp edge in the same place, the Original view jumped to the same zoom level, but the position was misaligned with the detail I had been looking at. Pan to fix it, flip back, the SVG view had moved too. The two views were behaving as one viewport with two contents, when conceptually they are two viewports of two different things. Compare-at-detail workflows were unusable while the state was shared.

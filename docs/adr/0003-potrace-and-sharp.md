@@ -5,6 +5,8 @@ title: "ADR 0003: Potrace and Sharp for the Conversion Pipeline"
 
 # ADR 0003: Potrace and Sharp for the conversion pipeline
 
+> **Decision:** Potrace for tracing, Sharp for preprocessing. **Why:** Potrace is purpose-built for monochrome path extraction; Sharp is fast enough (~50 ms) for a real-time preview loop. Both are npm-native, no cross-platform binary packaging required.
+
 ## Context
 
 Two libraries sit at the heart of this app: one does raster-to-vector tracing (PNG → SVG paths), one does image preprocessing (decode, composite, greyscale, threshold, the inputs the tracer consumes). Picking them correctly is the most consequential technical decision in the project, everything else is UI and state around that pipeline.
@@ -50,11 +52,6 @@ This ADR also closes a forward-reference from ADR 0001: the Electron runtime was
 - **ImageTracer.** Worse trace quality on the exact inputs I care about. Taking on a core dependency that was last maintained in 2020 is a bet against the project's future, if a security or correctness bug surfaces, I inherit it.
 - **AutoTrace.** Native CLI distribution forces a cross-platform build step, a binary-packaging step inside the Electron bundle, and per-platform testing of the shell-out layer. All of that work produces no capability advantage over Potrace at monochrome scope. Over-engineering for what is already solved.
 - **vtracer.** Colour-capable, Rust-based, genuinely impressive. Wrong tool for v1, using it would mean paying for colour machinery I do not use, routing logic I do not need, and a heavier native dependency. Held as the natural next step if and when colour tracing enters scope (ADR 0013 follow-up).
-
-**Anticipating a question: "Why not pick vtracer now, since it covers both monochrome and colour?"** 
-First, vtracer's monochrome trace quality is visibly worse than Potrace because vtracer is optimised for colour input, picking it now would mean a quality regression on the inputs v1 actually serves. 
-Second, the v1 scope-freeze (ADR 0013) makes paying for colour machinery, routing logic, and a heavier Rust-native dependency right now an over-engineering tax on a roadmap item. 
-Third, adding vtracer alongside Potrace later is a routing branch on a per-image options flag, a small addition on top of the stable Sharp preprocessing layer.
 
 ### Why Sharp
 

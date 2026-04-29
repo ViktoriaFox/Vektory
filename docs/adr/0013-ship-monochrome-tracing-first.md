@@ -5,6 +5,8 @@ title: "ADR 0013: Ship Monochrome Tracing First"
 
 # ADR 0013: Ship monochrome tracing first before multi-color tracing
 
+> **Decision:** Ship monochrome-only tracing for v1; defer multi-colour. **Why:** All real dogfooding work was monochrome; adding colour would require unvalidated UX decisions (palette size, layer ordering, threshold semantics per layer) that couldn't be closed before the release deadline.
+
 ## Context
 
 I want to support multi-colour / palette-based vectorisation eventually. The core algorithm (Potrace) and the current UI are built around a single threshold and a single fill colour. Adding multi-colour tracing would require palette detection, multiple passes or regions, and a different settings model.
@@ -37,7 +39,7 @@ This is grounded in dogfooding, not market research. The work I had been doing w
 
 **Negative**
 - Users who need multi-colour output must use other tools or wait for a future release. Documented in Known Limitations and Roadmap, not hidden.
-- "Monochrome only" frames Vektory as a narrower tool than it could be on day 1. For a portfolio piece this is a real trade-off, some readers will see it as scope-limited rather than scope-disciplined. The ADR exists in part to make the difference legible.
+- "Monochrome only" frames Vektory as a narrower tool than it could be on day 1. Documented in Known Limitations and Roadmap, not hidden.
 
 ## Follow-up
 

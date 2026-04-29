@@ -5,6 +5,8 @@ title: "ADR 0005: Radix UI over MUI and Headless UI"
 
 # ADR 0005: Radix UI over MUI and Headless UI
 
+> **Decision:** Replace MUI with Radix UI unstyled primitives. **Why:** MUI's theme system couldn't be overridden cleanly enough to produce a distinctive visual identity; Radix gives full style ownership with accessibility and portal handling included.
+
 ## Context
 
 Vektory started on MUI. It got me moving fast, but as the design took shape I hit a wall: I couldn't make the app look like *Vektory*. Every override fought the theme system, and the result still read as "a MUI app in a custom skin", recognisable at a glance. I wanted the opposite: a distinctive dark-purple-and-gold surface where nothing shouted its origin library, where the visual identity was mine.
@@ -45,10 +47,7 @@ Similar philosophy, unstyled primitives, accessibility built in. Distributed as 
 - With MUI, consistency is a side effect of the library. With Radix, consistency is my responsibility. Every new primitive I introduce needs to follow the same styling conventions or the UI drifts. I had to write down the conventions (spacing scale, token usage, interaction states) and actually follow them.
 - No "out of the box" wins. If I want a styled button, I style it.
 
-**LLM-assisted development needs explicit grounding**
-
-Because Radix is unstyled, when an LLM helps me build a new component, it has no default to lean on, it invents one. Left ungrounded, the model produces well-written components that don't match anything else in the app.
-Before implementing asnything I made it to carry the discipline into the prompt: I maintain a `UI_CONSTRAINTS.md` that documents the spacing scale, colour tokens, typography roles, icon-size tokens, and component patterns. Any time I ask an LLM to write or modify a component, that doc is part of the context. The result is consistent across sessions and across models.
+- LLM-assisted component work requires `UI_CONSTRAINTS.md` in context — otherwise the model invents styles that don't match the system.
 
 ## Follow-up
 

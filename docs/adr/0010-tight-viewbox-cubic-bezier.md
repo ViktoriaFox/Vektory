@@ -5,6 +5,8 @@ title: "ADR 0010: Tight SVG ViewBox via Cubic Bezier Extrema"
 
 # ADR 0010: Tight SVG viewBox via cubic Bezier extrema
 
+> **Decision:** Compute tight bounding boxes by solving for cubic Bezier extrema analytically, then output `viewBox="0 0 W H"` with a translate group. **Why:** Control-point bounds over-estimate the true path extents; non-zero viewBox origins break Figma, Illustrator, and Sketch.
+
 ## Context
 
 I used Vektory to vectorise my own Vektory logo for the app icon and this website. The recursion was satisfying; the result was not. In the Windows taskbar and macOS Dock, my icon looked visibly smaller than the surrounding icons, as if the system had given me a smaller frame. The icons were all rendering into the same fixed frame; mine just had extra empty space *inside* its SVG viewBox, which the OS dutifully scaled along with the artwork.
@@ -15,14 +17,6 @@ Once I understood what I was looking at, two problems underlay the same symptom:
 
 1. **Control-point bounding boxes over-estimate the true path bounds.** Potrace outputs cubic Bezier paths. A naive bounding box over the control points is easy (min/max of all `(x, y)` pairs) but imprecise, control points can sit *outside* the curve itself. The resulting viewBox contains whitespace the artwork never occupies.
 2. **Non-zero viewBox origins break popular SVG editors.** A tight viewBox like `viewBox="131 96 400 300"` is mathematically correct, but Figma, Illustrator, and Sketch have well-known edge cases where they render path coordinates at face value and ignore the viewport offset, misplacing or clipping the artwork. Ship a file with a non-zero origin and a designer opening it in Figma sees a broken SVG.
-
-## What the LLM got wrong
-
-This fix is worth calling out because it was one of the cases where LLM assistance stalled early. The model could not diagnose the symptom from my description. I had to investigate the geometry myself to understand that the problem was excess whitespace inside a too-loose viewBox.
-
-Once I had framed the problem, the LLM's proposed fixes each created side effects, either simplistic bounding boxes that still over-counted, or viewBox manipulations that broke in SVG editors. The working solution came from independent research into cubic Bezier geometry: the analytical way to find the true extrema of a cubic segment is to solve for the points where the derivative equals zero, which reduces to a quadratic equation over the parameter `t ∈ (0, 1)`.
-
-Naming this is the point. LLMs are fast collaborators on code I can specify precisely; they are not a substitute for understanding the problem. When the symptom is visual and the cause is mathematical, the architect still has to do the diagnosis.
 
 ## Decision
 
@@ -46,6 +40,8 @@ const newContent = `<g transform="translate(${-x}, ${-y})">${innerContent}</g>`;
 **The naive bounding box, and the irony of an already-installed library.** The trivial approach is to take every point of every segment (including the two control points of each cubic) and compute min/max in each axis. `O(n)`, two lines of code. That is also exactly what `svg-path-bounds`, which was *already in `package.json`* as a transitive dependency, does in its core. Its entire algorithm is a loop that tracks min/max across all points. The result is the convex hull of the control polygon, which is always greater than or equal to the real curve bounds, never smaller. Cubic Bezier control points almost never lie on the curve; a segment is guaranteed to sit *inside* the hull of its four defining points but usually nowhere near the two inner ones. So convex hull leaves real whitespace, exactly what a tight viewBox is supposed to eliminate.
 
 The library's sub-dependencies (`parse-svg-path`, `abs-svg-path`, `normalize-svg-path`) are useful on their own for parsing Potrace output into a normalised segment list, and they *are* imported directly. The top-level `svg-path-bounds` is not, because its core is the wrong algorithm for this problem. Reusing the preprocessing while replacing the core is the pragmatic move: no second parser, no duplicated normalisation code, just a correct algorithm on top of an existing pipeline.
+
+**Why the fix required independent diagnosis.** LLM-suggested approaches each produced side effects — simplistic bounding boxes still over-counted; viewBox manipulations broke in SVG editors. The symptom was visual and the cause mathematical; diagnosing it required investigating the geometry directly. When I understood the problem, the solution followed: find the true extrema of each cubic segment analytically.
 
 **Analytical, not numerical sampling.** The obvious replacement for convex hull is to sample `B(t)` at many values of `t` per segment (say 100) and track min/max. It works, and loses on every axis:
 
