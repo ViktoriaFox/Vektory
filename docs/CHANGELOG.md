@@ -15,7 +15,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) · Versioning: 
 
 - **Three-process Electron model**: main process (Node.js), preload bridge (isolated context), renderer (React + Vite). `contextIsolation: true`, `nodeIntegration: false` enforced throughout. See [ADR 0001](adr/0001-electron-and-typescript), [ADR 0002](adr/0002-context-isolation-and-preload-api).
 - **Typed IPC surface**: renderer-initiated calls use `ipcRenderer.invoke()` → `ipcMain.handle()`, exposed through a typed `window.electronAPI` interface via `contextBridge`. Main-pushed events (menu actions) use `ipcRenderer.on()` listeners, also exposed through the preload. See [ADR 0002](adr/0002-context-isolation-and-preload-api).
-- **Dual build pipeline**: `tsc` compiles the main process; Vite bundles the renderer. `concurrently` + `wait-on` orchestrate the development workflow. See [ADR 0003](adr/0003-react-and-vite-for-renderer).
+- **Dual build pipeline**: `tsc` compiles the main process; Vite bundles the renderer. `concurrently` + `wait-on` orchestrate the development workflow. See [ADR 0004](adr/0004-react-and-vite-for-renderer).
 - **Selective state persistence**: `useAppStore` persists only `themeMode` and `showEditor` across sessions via Zustand middleware. Conversion options, file list, and SVG cache are session-scoped and reset on restart.
 - **Independent preview view state**: `usePreviewStore` maintains separate zoom/pan state for the SVG and Original views, so switching views does not reset your position in either.
 - **Radix UI component layer**: all interactive primitives (sliders, selects, tabs, tooltips, checkboxes) use a single CSS-variable token system (`--space-*`, `--bg-*`, `--accent-*`). No hardcoded values in component files.
@@ -35,7 +35,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) · Versioning: 
 
 ### Known limitations
 
-- Monochrome (single fill colour) tracing only. Multi-colour output deferred to a future version. See [ADR 0004](adr/0004-ship-monochrome-tracing-first).
+- Monochrome (single fill colour) tracing only. Multi-colour output deferred to a future version. See [ADR 0013](adr/0013-ship-monochrome-tracing-first).
 - The macOS binary is not notarised — Gatekeeper will show a warning on first launch. See the [Install Guide](install) for the workaround.
 - The Windows installer is not signed with an EV certificate — SmartScreen will show a warning. See the [Install Guide](install) for the workaround.
 

@@ -22,8 +22,8 @@ This is a **v1 portfolio project** — the goal is to demonstrate architectural 
 ## Key design decisions
 
 - **Sandboxed renderer** — `nodeIntegration: false`, `contextIsolation: true`. The UI process cannot touch the file system or IPC directly. All communication goes through a typed `contextBridge` API (`window.electronAPI`). ([ADR 0002](adr/0002-context-isolation-and-preload-api))
-- **Dual build pipeline** — main process compiled with `tsc`, renderer bundled with Vite. Independent pipelines, independent HMR in dev. ([ADR 0003](adr/0003-react-and-vite-for-renderer))
-- **Tight SVG bounding box** — `pathBounds()` solves cubic bezier extrema analytically for pixel-accurate `viewBox` values, rather than using the control-point convex hull which over-estimates bounds.
+- **Dual build pipeline** — main process compiled with `tsc`, renderer bundled with Vite. Independent pipelines, independent HMR in dev. ([ADR 0004](adr/0004-react-and-vite-for-renderer))
+- **Radix UI over MUI** — unstyled primitives gave me fine-grained control over the dark/gold design system; tree-shakeable per-primitive packages keep the bundle lean. ([ADR 0005](adr/0005-radix-over-mui-and-headless-ui))
 
 ---
 

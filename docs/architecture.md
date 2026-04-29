@@ -56,7 +56,7 @@ sequenceDiagram
 - SVG is sanitized with DOMPurify before storing in state, then written directly to `innerHTML` (bypasses React re-render for large SVGs)
 - Result is cached per file keyed on the full options object — switching back to a previously converted file is instant
 
-See [ADR 0007](adr/0007-options-based-svg-cache) · [ADR 0010](adr/0010-tight-viewbox-cubic-bezier)
+See [ADR 0008](adr/0008-options-based-svg-cache) · [ADR 0010](adr/0010-tight-viewbox-cubic-bezier)
 
 ---
 
@@ -99,7 +99,7 @@ See [ADR 0009](adr/0009-batch-concurrency-control)
 **`usePreviewStore`** — independent `ViewState` (zoom, pan) for the SVG view and the Original view.
 - Toggling between views preserves each view's zoom and pan position independently
 
-See [ADR 0006](adr/0006-per-file-options-selective-persistence) · [ADR 0008](adr/0008-dual-independent-view-state)
+See [ADR 0007](adr/0007-per-file-options-selective-persistence) · [ADR 0011](adr/0011-dual-independent-view-state)
 
 ---
 
@@ -113,4 +113,4 @@ See [ADR 0006](adr/0006-per-file-options-selective-persistence) · [ADR 0008](ad
 
 Main process changes require a full Electron restart. Renderer-only changes benefit from Vite HMR.
 
-See [ADR 0003](adr/0003-react-and-vite-for-renderer)
+See [ADR 0004](adr/0004-react-and-vite-for-renderer)
